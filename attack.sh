@@ -28,6 +28,15 @@ fi
 
 # 2. Start Node Server
 cd cloud_c2
+
+# Clear uploads folder for a fresh session
+if [ -d "uploads" ]; then
+    echo "[*] Clearing previous exfiltrated images..."
+    rm -rf uploads/*
+else
+    mkdir -p uploads
+fi
+
 echo "[*] Running npm install..."
 npm install --silent
 echo ""
