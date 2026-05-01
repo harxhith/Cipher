@@ -13,8 +13,21 @@ echo "[+] Starting RPi Edge Gateway..."
 # Running as current user to preserve Node/NVM environment
 if [ ! -d "rpi_dashboard/dist" ]; then
     echo "[*] RPi Dashboard build not found. Building now..."
-    cd rpi_dashboard && npm install && npm run build
+    echo "[*] Increasing Node memory limit for Raspberry Pi..."
+    cd rpi_dashboard && npm install && NODE_OPTIONS="--max-old-space-size=1024" npm run build
+    
+    if [ $? -ne 0 ]; then
+        echo "[!] ERROR: Dashboard build failed (likely out of memory)."
+        echo "[!] Try closing other apps or building on your laptop and copying the 'dist' folder."
+        exit 1
+    fi
     cd ..
+fi
+
+# Double check dist exists
+if [ ! -d "rpi_dashboard/dist" ]; then
+    echo "[!] ERROR: 'rpi_dashboard/dist' folder is missing. Build failed."
+    exit 1
 fi
 
 # 2. Start ngrok in background
