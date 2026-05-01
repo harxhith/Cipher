@@ -21,55 +21,20 @@
 ## 🚀 Quick Start Guide
 
 ### 1. Cloud C2 Server (The Attacker)
-Acts as the command center for triggering attacks and receiving exfiltrated images.
 ```bash
-cd cloud_c2
-npm install
-node server.js
-# Runs on http://localhost:5000
+./attack.sh
 ```
 
-### 2. Edge Gateway (The Defender)
-Raspberry Pi server that sniffs network packets and calculates threat scores.
+### 2. Edge Gateway & Dashboard (The Defender)
 ```bash
-cd rpi_gateway
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-# Run with root for packet sniffing:
-sudo venv/bin/python server.py
-# Runs on http://localhost:5000 (Relay & UI)
+./defend.sh
 ```
+*Note: This will automatically start the server and print your public ngrok URL.*
 
-**Expose the Gateway (Required for Cloud C2 connectivity):**
-To allow the Cloud C2 to communicate with your Raspberry Pi, expose port 5000:
-```bash
-ngrok http 5000
-```
-*Note: Copy the `https://...` URL from ngrok and update `RPI_GATEWAY_URL` in `cloud_c2/server.js`.*
-
-### 3. Cybersecurity Dashboard (The UI)
-Futuristic 3D dashboard to visualize the entire network.
-
-**Local Access:**
-```bash
-cd rpi_dashboard
-npm install
-npm run dev
-# View at http://localhost:3000
-```
-
-**Remote Access (via ngrok):**
-To access the dashboard from another device (like your laptop), run:
-```bash
-npm run dev:tunnel
-```
-After running this, look for the **Forwarding** URL in your terminal (e.g., `https://a1b2-c3d4.ngrok-free.app`). **Visit that URL on your laptop.**
-
-### 4. ESP32 Firmware
+### 3. ESP32 Firmware
 Flash the firmware to your ESP32-CAM using Arduino IDE or PlatformIO.
 - File: `esp32cam/esp32cam.ino`
-- Configure your Wi-Fi SSID and Server IPs in the code before flashing.
+- Configure your Wi-Fi SSID and Password in the code before flashing.
 
 ---
 
