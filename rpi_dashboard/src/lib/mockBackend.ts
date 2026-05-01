@@ -40,22 +40,22 @@ const INITIAL_NODES: NetworkNode[] = [
   { 
     id: '1', type: 'phone', label: 'ESP32-CAM', 
     pos: new THREE.Vector3(2.8, 1.2, -1.8), anchor: new THREE.Vector3(0.9, 0.3, -0.6), 
-    trustScore: 0.95, ip: '192.168.4.10', mac: 'AA:BB:CC:DD:EE:11' 
+    trustScore: 0.95, ip: '10.229.131.10', mac: 'AA:BB:CC:DD:EE:11' 
   },
   { 
     id: '2', type: 'laptop', label: 'Staff Laptop Alpha', 
     pos: new THREE.Vector3(-2.4, 2.0, 2.4), anchor: new THREE.Vector3(-0.7, 0.6, 0.7), 
-    trustScore: 1.0, ip: '192.168.4.15', mac: 'AA:BB:CC:DD:EE:22' 
+    trustScore: 1.0, ip: '10.229.131.15', mac: 'AA:BB:CC:DD:EE:22' 
   },
   { 
     id: '3', type: 'laptop', label: 'Staff Laptop Beta', 
     pos: new THREE.Vector3(1.0, -2.8, 2.0), anchor: new THREE.Vector3(0.3, -0.8, 0.6), 
-    trustScore: 0.99, ip: '192.168.4.16', mac: 'AA:BB:CC:DD:EE:33' 
+    trustScore: 0.99, ip: '10.229.131.16', mac: 'AA:BB:CC:DD:EE:33' 
   },
   { 
     id: '4', type: 'laptop', label: 'Guest Laptop', 
     pos: new THREE.Vector3(-3.2, -1.0, -2.2), anchor: new THREE.Vector3(-1.0, -0.3, -0.7), 
-    trustScore: 0.90, ip: '192.168.4.17', mac: 'AA:BB:CC:DD:EE:44' 
+    trustScore: 0.90, ip: '10.229.131.17', mac: 'AA:BB:CC:DD:EE:44' 
   },
   { 
     id: '5', type: 'laptop', label: 'C2 Hacker (GCP)', 
@@ -140,10 +140,10 @@ export function useMockBackend() {
     // Keep initial boot logs
     const initLogs = () => {
       addLog('SYSTEM START: hostapd — AP Cipher_IoT_Net online on wlan0', 'info');
-      setTimeout(() => addLog('SYSTEM START: dnsmasq DHCP server active — 192.168.4.10–50', 'info'), 300);
+      setTimeout(() => addLog('SYSTEM START: dnsmasq DHCP server active — 10.42.0.10–50', 'info'), 300);
       setTimeout(() => addLog('SYSTEM START: Scapy sniffer running in promiscuous mode on wlan0', 'info'), 600);
-      setTimeout(() => addLog('DEVICE JOIN: ESP32-CAM [AA:BB:CC:DD:EE:11] → 192.168.4.10', 'info'), 900);
-      setTimeout(() => addLog('DEVICE JOIN: Staff Laptop Alpha [AA:BB:CC:DD:EE:22] → 192.168.4.15', 'info'), 1200);
+      setTimeout(() => addLog('DEVICE JOIN: ESP32-CAM [AA:BB:CC:DD:EE:11] → 10.42.0.10', 'info'), 900);
+      setTimeout(() => addLog('DEVICE JOIN: Staff Laptop Alpha [AA:BB:CC:DD:EE:22] → 10.42.0.15', 'info'), 1200);
     };
     initLogs();
 

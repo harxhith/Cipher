@@ -81,7 +81,7 @@ def _auto_detect_iface():
     return "wlo1"
 
 IFACE = _auto_detect_iface()
-ESP32_CAM_IP = "10.42.0.151"  # Laptop hotspot → ESP32-CAM; auto-updated on first heartbeat
+ESP32_CAM_IP = "10.42.0.151"  # Auto-updated on first heartbeat
 PROTECTION_ENABLED = True
 CLOUD_C2_URL = "http://35.212.229.239:5000" # Cloud C2 Endpoint
 
@@ -141,8 +141,7 @@ def arp_discovery_thread():
     add_log("[*] Starting active ARP discovery thread (30s interval)")
     while True:
         try:
-            # Scan the 10.42.0.0/24 subnet — this is the laptop's WiFi hotspot
-            # network (wlo1 @ 10.42.0.1). ESP32-CAM connects here.
+            # Scan the 10.42.0.0/24 subnet — this is the Pi's USB WiFi hotspot
             ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst="10.42.0.0/24"),
                              timeout=2, iface=IFACE, verbose=False)
             

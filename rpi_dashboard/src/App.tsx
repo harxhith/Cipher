@@ -246,7 +246,7 @@ export default function App() {
               <p className="text-[9px] font-mono text-white/50 uppercase tracking-tighter font-bold">Spectral Integrity: 99.2%</p>
             </div>
             <div className="text-[9px] text-gray-500 font-mono flex flex-col gap-0.5 uppercase tracking-[0.2em] font-bold">
-              <span>Cipher_IoT_Net // 192.168.4.1</span>
+              <span>Cipher_IoT_Net // 10.42.0.1</span>
               <span className={cn(protectionEnabled ? "text-white/70" : "text-red-500")}>Gateway: {protectionEnabled ? "Secure" : "Exposed"}</span>
             </div>
           </div>
