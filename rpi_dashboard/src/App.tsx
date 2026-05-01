@@ -241,13 +241,29 @@ export default function App() {
           <div className="absolute bottom-10 left-8 flex items-end gap-8">
             <div className="space-y-1">
               <div className="flex gap-0.5 items-end">
-                {[...Array(12)].map((_, i) => (<div key={i} className={cn("w-1 transition-all duration-300", i < Math.ceil((nodes.filter(n => !n.isUnderAttack).length / nodes.length) * 12) ? "bg-white h-4" : "bg-white/10 h-2")} />))}
+                {[...Array(12)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={cn(
+                      "w-1 transition-all duration-300", 
+                      i < Math.ceil((nodes.reduce((acc, n) => acc + n.trustScore, 0) / nodes.length) * 12) 
+                        ? "bg-white h-4" 
+                        : "bg-white/10 h-2"
+                    )} 
+                  />
+                ))}
               </div>
-              <p className="text-[9px] font-mono text-white/50 uppercase tracking-tighter font-bold">Spectral Integrity: 99.2%</p>
+              <p className="text-[9px] font-mono text-white/50 uppercase tracking-tighter font-bold">
+                Spectral Integrity: {(nodes.reduce((acc, n) => acc + n.trustScore, 0) / nodes.length * 100).toFixed(1)}%
+              </p>
             </div>
             <div className="text-[9px] text-gray-500 font-mono flex flex-col gap-0.5 uppercase tracking-[0.2em] font-bold">
               <span>Cipher_IoT_Net // 10.42.0.1</span>
-              <span className={cn(protectionEnabled ? "text-white/70" : "text-red-500")}>Gateway: {protectionEnabled ? "Secure" : "Exposed"}</span>
+              <span className={cn(
+                !protectionEnabled || isUnderAttack ? "text-red-500" : "text-white/70"
+              )}>
+                Gateway: {isUnderAttack ? "BREACH DETECTED" : (protectionEnabled ? "Secure" : "Exposed")}
+              </span>
             </div>
           </div>
         </div>
