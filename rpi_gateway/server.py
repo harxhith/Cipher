@@ -266,11 +266,11 @@ def scoring_engine():
                     else:
                         # No attack detected in this window
                         if dev_status["threat_score"] > 0:
-                            # Much slower decay: from 150 to 0 takes ~25 seconds of silence
+                            # Slower decay: from 150 to 0 takes ~30 seconds
                             score_delta = -2 if not PROTECTION_ENABLED else -3
                         
-                        # Only clear attack type if score has fully decayed AND no detection in 15s
-                        if dev_status["threat_score"] <= 0 and now - dev_status.get("last_detection", 0) > 15:
+                        # Clear attack type immediately if score is 0 and no detection in 2s
+                        if dev_status["threat_score"] <= 0 and now - dev_status.get("last_detection", 0) > 2:
                             dev_status["attack_type"] = None
 
                     # Set status based on score (only if online)
@@ -283,7 +283,7 @@ def scoring_engine():
                         dev_status["status"] = "Malicious"
                     elif score >= 50:
                         dev_status["status"] = "Suspicious"
-                    elif dev_status["attack_type"] is not None or now - dev_status.get("last_detection", 0) < 15:
+                    elif dev_status["attack_type"] is not None or now - dev_status.get("last_detection", 0) < 1:
                         # Keep status suspicious if we have an active or recently detected attack
                         dev_status["status"] = "Suspicious"
                     else:
@@ -358,11 +358,15 @@ def relay_command():
         with state_lock:
             for ip in list(blocked_ips):
                 clear_mitigation(ip)
-            # Reset threat scores so the engine doesn't re-block immediately
+            # Reduce threat scores to 'Suspicious' level (49) so animations stop
+            # and device is unblocked, but it still shows some residual heat.
             for ip in live_status:
-                live_status[ip]["threat_score"] = 0
+                if live_status[ip]["threat_score"] > 49:
+                    live_status[ip]["threat_score"] = 49
                 live_status[ip]["status"] = "Safe"
                 live_status[ip]["attack_type"] = None
+                # Set last_detection to far in the past so it doesn't linger
+                live_status[ip]["last_detection"] = 0
 
     # Map actions to ESP32-CAM endpoints
     action_map = {

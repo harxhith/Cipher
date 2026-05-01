@@ -9,7 +9,31 @@ echo "===================================================="
 
 echo "[+] Starting RPi Edge Gateway..."
 
-# 1. Build Dashboard if dist is missing
+# 1. Ensure Hotspot is active on wlan1
+echo "[*] Verifying Cipher_IoT_Net hotspot on wlan1..."
+if ! nmcli con show --active | grep -q "wlan1"; then
+    echo "[!] Hotspot not active on wlan1. Attempting to start..."
+    
+    # Check if the connection profile already exists
+    if ! nmcli con show "CipherHotspot" > /dev/null 2>&1; then
+        echo "[*] Creating new hotspot profile: Cipher_IoT_Net"
+        sudo nmcli con add type wifi ifname wlan1 con-name CipherHotspot autoconnect yes ssid Cipher_IoT_Net
+        sudo nmcli con modify CipherHotspot 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
+        sudo nmcli con modify CipherHotspot wifi-sec.key-mgmt wpa-psk wifi-sec.psk cipher2024
+    fi
+    
+    sudo nmcli con up CipherHotspot
+    if [ $? -ne 0 ]; then
+        echo "[!] ERROR: Failed to start hotspot on wlan1."
+        echo "[!] Please ensure the USB WiFi adapter is plugged in and supports AP mode."
+        exit 1
+    fi
+    echo "[+] Hotspot active at 10.42.0.1"
+else
+    echo "[+] Hotspot already active on wlan1."
+fi
+
+# 2. Build Dashboard if dist is missing
 # Running as current user to preserve Node/NVM environment
 if [ ! -d "rpi_dashboard/dist" ]; then
     echo "[*] RPi Dashboard build not found. Building now..."

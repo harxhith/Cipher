@@ -109,7 +109,7 @@ export function useBackend() {
               pos,
               anchor: getAnchor(pos),
               trustScore: Math.max(0.1, 1.0 - (stats.threat_score / 150)),
-              isUnderAttack: (stats.status !== "Safe" && stats.status !== "Offline") || !!stats.attack_type,
+              isUnderAttack: !!stats.attack_type || stats.threat_score > 50,
               attackType: (stats.attack_type as 'exfil' | 'recon' | 'flood' | null) ?? null,
               status: stats.status
             };
@@ -157,7 +157,7 @@ export function useBackend() {
                 label: isEsp ? "ESP32-CAM" : updatedNodes[existingIdx].label,
                 type: isEsp ? 'camera' : updatedNodes[existingIdx].type,
                 trustScore: Math.max(0.1, 1.0 - (stats.threat_score / 150)),
-                isUnderAttack: (stats.status !== "Safe" && stats.status !== "Offline") || !!stats.attack_type,
+                isUnderAttack: !!stats.attack_type || stats.threat_score > 50,
                 attackType: (stats.attack_type as 'exfil' | 'recon' | 'flood' | null) ?? null,
                 status: stats.status
               };
