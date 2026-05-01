@@ -139,9 +139,9 @@ export function useMockBackend() {
   useEffect(() => {
     // Keep initial boot logs
     const initLogs = () => {
-      addLog('SYSTEM START: hostapd — AP Cipher_IoT_Net online on wlan0', 'info');
+      addLog('SYSTEM START: hostapd — AP Cipher_IoT_Net online on wlan1', 'info');
       setTimeout(() => addLog('SYSTEM START: dnsmasq DHCP server active — 10.42.0.10–50', 'info'), 300);
-      setTimeout(() => addLog('SYSTEM START: Scapy sniffer running in promiscuous mode on wlan0', 'info'), 600);
+      setTimeout(() => addLog('SYSTEM START: Scapy sniffer running in promiscuous mode on wlan1', 'info'), 600);
       setTimeout(() => addLog('DEVICE JOIN: ESP32-CAM [AA:BB:CC:DD:EE:11] → 10.42.0.10', 'info'), 900);
       setTimeout(() => addLog('DEVICE JOIN: Staff Laptop Alpha [AA:BB:CC:DD:EE:22] → 10.42.0.15', 'info'), 1200);
     };

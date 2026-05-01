@@ -55,4 +55,5 @@ if [ ! -d "venv" ]; then
 fi
 
 echo "[*] Starting Scapy server with sudo..."
-sudo venv/bin/python server.py
+export IFACE=wlan1
+sudo -E venv/bin/python server.py
