@@ -96,8 +96,8 @@ def mitigate_device(ip):
     if ip not in blocked_ips:
         add_log(f"[MITIGATION] Actively blocking malicious host: {ip}")
         try:
-            # 1. IPTables Drop
-            subprocess.run(["sudo", "iptables", "-A", "FORWARD", "-s", ip, "-j", "DROP"], check=True)
+            # Use full path for robustness
+            subprocess.run(["sudo", "/usr/sbin/iptables", "-A", "FORWARD", "-s", ip, "-j", "DROP"], check=True)
             blocked_ips.add(ip)
         except Exception as e:
             add_log(f"[!] Mitigation failed: {e}")
@@ -108,7 +108,7 @@ def clear_mitigation(ip):
     if ip in blocked_ips:
         add_log(f"[MITIGATION] Restoring access for safe host: {ip}")
         try:
-            subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-s", ip, "-j", "DROP"], check=True)
+            subprocess.run(["sudo", "/usr/sbin/iptables", "-D", "FORWARD", "-s", ip, "-j", "DROP"], check=True)
             blocked_ips.remove(ip)
         except Exception as e:
             add_log(f"[!] Cleanup failed: {e}")
@@ -353,6 +353,17 @@ def relay_command():
     action = data['action']
     add_log(f"Received C2 command: {action}")
     
+    # If we receive a 'stop' command, clear ALL mitigations immediately
+    if action == "stop":
+        with state_lock:
+            for ip in list(blocked_ips):
+                clear_mitigation(ip)
+            # Reset threat scores so the engine doesn't re-block immediately
+            for ip in live_status:
+                live_status[ip]["threat_score"] = 0
+                live_status[ip]["status"] = "Safe"
+                live_status[ip]["attack_type"] = None
+
     # Map actions to ESP32-CAM endpoints
     action_map = {
         "start_exfil": "/trigger/exfil",
