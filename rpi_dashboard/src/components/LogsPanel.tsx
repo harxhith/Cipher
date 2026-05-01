@@ -12,11 +12,11 @@ interface LogsPanelProps {
 export const LogsPanel: React.FC<LogsPanelProps> = ({ logs, onClear }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom only when new logs arrive
+  // Auto-scroll to top only when new logs arrive (since they are prepended)
   useEffect(() => {
     if (containerRef.current && logs.length > 0) {
       containerRef.current.scrollTo({
-        top: containerRef.current.scrollHeight,
+        top: 0,
         left: 0,
         behavior: 'smooth'
       });
@@ -33,7 +33,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ logs, onClear }) => {
       <h4 className="font-black uppercase italic text-xs text-white mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
         <Terminal size={12} className="text-white/70" />
         <span>Mitigation Logs</span>
-        <span className="ml-auto text-[8px] font-mono text-white/30 animate-pulse mr-4">wlan0 // SEC_MONITOR</span>
+        <span className="ml-auto text-[8px] font-mono text-white/30 animate-pulse mr-4">wlan1 // SEC_MONITOR</span>
         <div className="flex items-center gap-3">
           <button 
             onClick={onClear}
