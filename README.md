@@ -38,17 +38,33 @@ source venv/bin/activate
 pip install -r requirements.txt
 # Run with root for packet sniffing:
 sudo venv/bin/python server.py
-# Runs on http://localhost:5000 (Relay) and http://localhost:8080 (Local UI)
+# Runs on http://localhost:5000 (Relay & UI)
 ```
+
+**Expose the Gateway (Required for Cloud C2 connectivity):**
+To allow the Cloud C2 to communicate with your Raspberry Pi, expose port 5000:
+```bash
+ngrok http 5000
+```
+*Note: Copy the `https://...` URL from ngrok and update `RPI_GATEWAY_URL` in `cloud_c2/server.js`.*
 
 ### 3. Cybersecurity Dashboard (The UI)
 Futuristic 3D dashboard to visualize the entire network.
+
+**Local Access:**
 ```bash
 cd rpi_dashboard
 npm install
 npm run dev
 # View at http://localhost:3000
 ```
+
+**Remote Access (via ngrok):**
+To access the dashboard from another device (like your laptop), run:
+```bash
+npm run dev:tunnel
+```
+After running this, look for the **Forwarding** URL in your terminal (e.g., `https://a1b2-c3d4.ngrok-free.app`). **Visit that URL on your laptop.**
 
 ### 4. ESP32 Firmware
 Flash the firmware to your ESP32-CAM using Arduino IDE or PlatformIO.
