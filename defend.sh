@@ -1,8 +1,13 @@
 #!/bin/bash
 
-# CIPHER: RPi Gateway Startup Script (The Defender)
-# Run this on your Raspberry Pi
+# Enforce sudo
+if [ "$EUID" -ne 0 ]; then 
+  echo "Please run as root (use sudo)"
+  exit
+fi
 
+# CIPHER: RPi Gateway Startup Script (The Defender)
+...
 echo "===================================================="
 echo "      🔥 CIPHER: Edge Gateway (Defender) 🔥         "
 echo "===================================================="

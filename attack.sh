@@ -1,8 +1,13 @@
 #!/bin/bash
 
-# CIPHER: Cloud C2 Startup Script (The Attacker)
-# Run this on your Cloud VM or Laptop
+# Enforce sudo
+if [ "$EUID" -ne 0 ]; then 
+  echo "Please run as root (use sudo)"
+  exit
+fi
 
+# CIPHER: Cloud C2 Startup Script (The Attacker)
+...
 echo "===================================================="
 echo "       🔥 CIPHER: Cloud C2 (Attacker) 🔥            "
 echo "===================================================="

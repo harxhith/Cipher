@@ -22,12 +22,12 @@
 
 ### 1. Cloud C2 Server (The Attacker)
 ```bash
-./attack.sh
+sudo ./attack.sh
 ```
 
 ### 2. Edge Gateway & Dashboard (The Defender)
 ```bash
-./defend.sh
+sudo ./defend.sh
 ```
 *Note: This will automatically start the server and print your public ngrok URL.*
 
