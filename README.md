@@ -24,6 +24,7 @@
 ```bash
 ./attack.sh
 ```
+*Note: This will automatically start the server and print the public URL (e.g., http://35.212.229.239:5000).*
 
 ### 2. Edge Gateway & Dashboard (The Defender)
 ```bash
