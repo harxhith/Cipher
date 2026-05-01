@@ -1,27 +1,23 @@
 #!/bin/bash
 
-# Enforce sudo
-if [ "$EUID" -ne 0 ]; then 
-  echo "Please run as root (use sudo)"
-  exit
-fi
-
 # CIPHER: RPi Gateway Startup Script (The Defender)
-...
+# Run this on your Raspberry Pi
+
 echo "===================================================="
 echo "      🔥 CIPHER: Edge Gateway (Defender) 🔥         "
 echo "===================================================="
 
 echo "[+] Starting RPi Edge Gateway..."
 
-# Build Dashboard if dist is missing
+# 1. Build Dashboard if dist is missing
+# Running as current user to preserve Node/NVM environment
 if [ ! -d "rpi_dashboard/dist" ]; then
     echo "[*] RPi Dashboard build not found. Building now..."
     cd rpi_dashboard && npm install && npm run build
     cd ..
 fi
 
-# Start ngrok in background
+# 2. Start ngrok in background
 echo "[*] Exposing Gateway via ngrok tunnel..."
 ngrok http 5000 > /dev/null 2>&1 &
 NGROK_PID=$!
@@ -46,7 +42,7 @@ else
     echo ""
 fi
 
-# Start Python Gateway
+# 3. Start Python Gateway
 cd rpi_gateway
 if [ ! -d "venv" ]; then
     echo "[*] Setting up Python virtual environment..."
@@ -54,6 +50,6 @@ if [ ! -d "venv" ]; then
     venv/bin/pip install -r requirements.txt
 fi
 
-echo "[*] Starting Scapy server with sudo..."
+echo "[*] Starting Scapy server (requires sudo)..."
 export IFACE=wlan1
 sudo -E venv/bin/python server.py

@@ -22,14 +22,14 @@
 
 ### 1. Cloud C2 Server (The Attacker)
 ```bash
-sudo ./attack.sh
+./attack.sh
 ```
 
 ### 2. Edge Gateway & Dashboard (The Defender)
 ```bash
-sudo ./defend.sh
+./defend.sh
 ```
-*Note: This will automatically start the server and print your public ngrok URL.*
+*Note: This will automatically start the server and print your public ngrok URL. It will ask for your password to run the packet sniffer.*
 
 ### 3. ESP32 Firmware
 Flash the firmware to your ESP32-CAM using Arduino IDE or PlatformIO.
