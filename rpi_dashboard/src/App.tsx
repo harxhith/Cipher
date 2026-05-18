@@ -285,8 +285,6 @@ export default function App() {
           <DemoPanel
             activeAttack={activeAttack}
             triggerExfil={triggerExfil!}
-            triggerRecon={triggerRecon!}
-            triggerFlood={triggerFlood!}
             stopAttacks={stopAttacks!}
             protectionEnabled={protectionEnabled}
           />
