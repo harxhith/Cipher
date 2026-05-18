@@ -3,11 +3,22 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Hardware: Raspberry Pi](https://img.shields.io/badge/Hardware-Raspberry_Pi-A22846?logo=raspberry-pi)](https://www.raspberrypi.org/)
 [![Hardware: ESP32](https://img.shields.io/badge/Hardware-ESP32-E7352C?logo=espressif)](https://www.espressif.com/en/products/socs/esp32)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-cipher--demo.netlify.app-00C7B7?logo=netlify&logoColor=white)](https://cipher-demo.netlify.app/)
 
 **Cipher** is a live, end-to-end IoT security demonstration platform. It demonstrates how a low-cost edge gateway (Raspberry Pi) can detect, score, and mitigate malicious IoT behavior in real-time without relying on cloud-based AI.
 
+---
+
+## 🌐 Live Preview
+
+> **Try the interactive dashboard demo — no hardware required.**
+> 
+> **[https://cipher-demo.netlify.app/](https://cipher-demo.netlify.app/)**
+> 
+> The demo simulates a real attack scenario: an ESP32-CAM device on the network begins exfiltrating data to a cloud C2 server. Click **"Simulate Attack"** to watch the threat detection and auto-mitigation play out in real-time on the 3D globe.
 
 ---
+
 
 ## 🏗️ System Architecture
 
