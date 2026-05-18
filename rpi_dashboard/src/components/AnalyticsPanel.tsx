@@ -1,7 +1,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion } from 'motion/react';
-import { MetricData } from '../lib/mockBackend';
+import { MetricData } from '../lib/types';
 
 interface AnalyticsPanelProps {
   metrics: MetricData[];

@@ -1,0 +1,13 @@
+[build]
+  base    = "rpi_dashboard"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  VITE_DEMO_MODE = "true"
+
+# SPA redirect — all routes → index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

@@ -11,12 +11,16 @@ import { NetworkLine } from './components/NetworkLine';
 import { DeviceNode } from './components/DeviceNode';
 import { ThreatSignal, AttackParticles, PacketFlow } from './components/AttackOverlay';
 import { LogsPanel } from './components/LogsPanel';
+import { DemoPanel } from './components/DemoPanel';
 import {
   Monitor, Shield, X, Globe as GlobeIcon,
   Terminal, Radio, Cpu
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { useBackend } from './lib/useBackend';
+import { useDemoBackend } from './lib/mockBackend';
+
+const IS_DEMO = import.meta.env.VITE_DEMO_MODE === 'true';
 
 function SceneController({ groupRef }: { groupRef: React.RefObject<THREE.Group | null> }) {
   useFrame(() => {
@@ -57,14 +61,22 @@ export default function App() {
     };
   }, []);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const backend = IS_DEMO ? useDemoBackend() : useBackend();
   const {
     nodes,
     logs,
     protectionEnabled,
     toggleProtection,
     isToggling,
-    clearLogs
-  } = useBackend();
+    clearLogs,
+    activeAttack,
+    triggerExfil,
+    triggerRecon,
+    triggerFlood,
+    stopAttacks,
+    isDemoMode,
+  } = backend;
 
   const activeNodeData = useMemo(() =>
     nodes.find(n => n.label === selectedNode),
@@ -267,6 +279,18 @@ export default function App() {
             </div>
           </div>
         </div>
+
+        {/* Demo Attack Panel — only visible in demo/Netlify mode */}
+        {isDemoMode && (
+          <DemoPanel
+            activeAttack={activeAttack}
+            triggerExfil={triggerExfil!}
+            triggerRecon={triggerRecon!}
+            triggerFlood={triggerFlood!}
+            stopAttacks={stopAttacks!}
+            protectionEnabled={protectionEnabled}
+          />
+        )}
       </div>
 
       {/* System Intel & Capabilities Section */}

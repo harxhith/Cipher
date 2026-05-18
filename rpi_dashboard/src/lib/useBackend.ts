@@ -1,37 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
-import { DeviceType } from '../components/DeviceNode';
 
-// --------------------------------------------------------
-// TYPES
-// --------------------------------------------------------
-
-export interface NetworkNode {
-  id: string;
-  type: DeviceType;
-  label: string;
-  pos: THREE.Vector3;
-  anchor: THREE.Vector3;
-  trustScore: number;
-  ip: string;
-  mac: string;
-  isUnderAttack?: boolean;
-  attackType?: 'exfil' | 'recon' | 'flood' | null;
-  status?: string;
-}
-
-export interface MetricData {
-  time: string;
-  pktRate: number;
-  byteRate: number;
-}
-
-export interface LogEntry {
-  id: string;
-  timestamp: string;
-  message: string;
-  level: 'info' | 'warning' | 'critical' | 'mitigation';
-}
+// Re-export shared types so other modules can import from here
+export type { NetworkNode, LogEntry, BackendHook } from './types';
+import type { NetworkNode, LogEntry } from './types';
 
 // --------------------------------------------------------
 // HELPER: Generate random position for new nodes
@@ -252,6 +224,7 @@ export function useBackend() {
     toggleProtection,
     activeAttack,
     isToggling,
+    isDemoMode: false,
     triggerExfil: () => sendCommand('start_exfil'),
     triggerRecon: () => sendCommand('start_scan'),
     triggerFlood: () => sendCommand('start_ddos'),

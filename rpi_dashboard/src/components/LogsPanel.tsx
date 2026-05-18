@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { LogEntry } from '../lib/mockBackend';
+import { LogEntry } from '../lib/types';
 import { cn } from '../lib/utils';
 import { Terminal } from 'lucide-react';
 
