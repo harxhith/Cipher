@@ -2,8 +2,9 @@ import React, { useState, useMemo, Suspense, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { motion, AnimatePresence } from 'motion/react';
+
+
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { Globe } from './components/Globe';
@@ -14,7 +15,7 @@ import { LogsPanel } from './components/LogsPanel';
 import { DemoPanel } from './components/DemoPanel';
 import {
   Monitor, Shield, X, Globe as GlobeIcon,
-  Terminal, Radio, Cpu
+  Terminal, Radio
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { useBackend } from './lib/useBackend';
@@ -36,6 +37,16 @@ export default function App() {
   const [showNetworkStats, setShowNetworkStats] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const groupRef = useRef<THREE.Group>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (groupRef.current) {
+        groupRef.current.visible = entry.isIntersecting;
+      }
+    });
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -72,8 +83,6 @@ export default function App() {
     clearLogs,
     activeAttack,
     triggerExfil,
-    triggerRecon,
-    triggerFlood,
     stopAttacks,
     isDemoMode,
   } = backend;
@@ -116,10 +125,10 @@ export default function App() {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,_#0a0a0a_0%,_#000_100%)] pointer-events-none -z-10" />
 
       {/* Hero Section - Static background, normal scroll */}
-      <div className="relative w-full h-screen border-b border-white/5 overflow-hidden">
+      <div ref={heroRef} className="relative w-full h-screen border-b border-white/5 overflow-hidden">
         {/* 3D Scene */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <Canvas>
+          <Canvas dpr={[1, 1.5]}>
             <SceneController groupRef={groupRef} />
             <PerspectiveCamera makeDefault position={[0, 0, 9]} fov={45} />
             <ambientLight intensity={1} />
@@ -145,7 +154,6 @@ export default function App() {
               </group>
             </Suspense>
             <OrbitControls enableDamping dampingFactor={0.05} enableZoom={false} enablePan={false} autoRotate={!selectedNode} autoRotateSpeed={0.3} />
-            <EffectComposer><Bloom intensity={0.8} luminanceThreshold={0.5} luminanceSmoothing={0.5} /></EffectComposer>
           </Canvas>
         </div>
 
@@ -254,14 +262,14 @@ export default function App() {
             <div className="space-y-1">
               <div className="flex gap-0.5 items-end">
                 {[...Array(12)].map((_, i) => (
-                  <div 
-                    key={i} 
+                  <div
+                    key={i}
                     className={cn(
-                      "w-1 transition-all duration-300", 
-                      i < Math.ceil((nodes.reduce((acc, n) => acc + n.trustScore, 0) / nodes.length) * 12) 
-                        ? "bg-white h-4" 
+                      "w-1 transition-all duration-300",
+                      i < Math.ceil((nodes.reduce((acc, n) => acc + n.trustScore, 0) / nodes.length) * 12)
+                        ? "bg-white h-4"
                         : "bg-white/10 h-2"
-                    )} 
+                    )}
                   />
                 ))}
               </div>
@@ -294,7 +302,7 @@ export default function App() {
       {/* System Intel & Capabilities Section */}
       <section className="relative w-full h-screen bg-[#020202] border-t border-white/5 z-30 flex flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        
+
         <div className="px-10 max-w-6xl mx-auto w-full space-y-16 relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center space-y-4">
             <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.6em] block">Edge Intelligence Architecture</span>
@@ -338,9 +346,6 @@ export default function App() {
           <div className="flex items-center gap-3">
             <GlobeIcon size={14} />
             <span className="text-[10px] font-black uppercase tracking-widest">Cipher Edge v1.0.4</span>
-          </div>
-          <div className="flex gap-6 text-[9px] font-black uppercase tracking-[0.2em]">
-            {['Harshith C', 'Yashas R', 'Manish M Gowda', 'N Shreyas Krishna'].map((name, i) => (<span key={i}>{name}</span>))}
           </div>
         </div>
       </footer>

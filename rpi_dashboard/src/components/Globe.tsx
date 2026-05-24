@@ -1,5 +1,5 @@
-import React, { useRef, useMemo } from 'react';
-import { useFrame, useLoader } from '@react-three/fiber';
+import React, { useRef, useState, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -41,10 +41,8 @@ export const Globe: React.FC = () => {
 const WorldDotMap: React.FC<{ radius: number }> = ({ radius }) => {
   const matRef = useRef<THREE.PointsMaterial>(null);
   const lastScale = useRef<number>(0);
+  const [geometry, setGeometry] = useState<THREE.BufferGeometry>(new THREE.BufferGeometry());
   
-  // Load the world map texture to use as a mask
-  const mapTexture = useLoader(THREE.TextureLoader, 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_specular_2048.jpg');
-
   useFrame((state) => {
     if (matRef.current) {
       const parent = matRef.current.parent;
@@ -62,42 +60,52 @@ const WorldDotMap: React.FC<{ radius: number }> = ({ radius }) => {
     }
   });
 
-  const geometry = useMemo(() => {
-    const tempPoints = [];
-    const count = 8000;
+  useEffect(() => {
+    // Load image asynchronously to not block React render
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_specular_2048.jpg';
     
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return new THREE.BufferGeometry();
-    
-    const img = mapTexture.image;
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    img.onload = () => {
+      // Downscale heavily for performance! 256x128 is plenty for checking regions
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      const w = 256;
+      const h = 128;
+      canvas.width = w;
+      canvas.height = h;
+      ctx.drawImage(img, 0, 0, w, h);
+      const imageData = ctx.getImageData(0, 0, w, h);
+      
+      const tempPoints = [];
+      const count = 10000;
 
-    for (let i = 0; i < count; i++) {
-      const phi = Math.acos(-1 + (2 * i) / count);
-      const theta = Math.sqrt(count * Math.PI) * phi;
-      
-      const u = 1 - (theta / (2 * Math.PI) % 1);
-      const v = phi / Math.PI;
-      
-      const xPix = Math.floor(u * (canvas.width - 1));
-      const yPix = Math.floor(v * (canvas.height - 1));
-      
-      const pixelIndex = (yPix * canvas.width + xPix) * 4;
-      const intensity = imageData.data[pixelIndex];
+      for (let i = 0; i < count; i++) {
+        const phi = Math.acos(-1 + (2 * i) / count);
+        const theta = Math.sqrt(count * Math.PI) * phi;
+        
+        const u = 1 - (theta / (2 * Math.PI) % 1);
+        const v = phi / Math.PI;
+        
+        const xPix = Math.floor(u * (w - 1));
+        const yPix = Math.floor(v * (h - 1));
+        
+        const pixelIndex = (yPix * w + xPix) * 4;
+        const intensity = imageData.data[pixelIndex];
 
-      if (intensity > 15) {
-        const x = radius * Math.sin(phi) * Math.cos(theta);
-        const y = radius * Math.cos(phi);
-        const z = radius * Math.sin(phi) * Math.sin(theta);
-        tempPoints.push(new THREE.Vector3(x, y, z));
+        // Only place dot if it passes the intensity check (creates the continents pattern)
+        if (intensity > 15) {
+          const x = radius * Math.sin(phi) * Math.cos(theta);
+          const y = radius * Math.cos(phi);
+          const z = radius * Math.sin(phi) * Math.sin(theta);
+          tempPoints.push(new THREE.Vector3(x, y, z));
+        }
       }
-    }
-    return new THREE.BufferGeometry().setFromPoints(tempPoints);
-  }, [radius, mapTexture]);
+      setGeometry(new THREE.BufferGeometry().setFromPoints(tempPoints));
+    };
+  }, [radius]);
 
   return (
     <points geometry={geometry}>
