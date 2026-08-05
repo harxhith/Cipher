@@ -28,13 +28,13 @@ export default function App() {
   const { frames: liveFrames, latencyMs, isConnected } = useLiveFeed(triggerTime);
 
   const allFrames = React.useMemo(() => {
-    const seen = new Set(liveFrames.map(f => f.name));
+    const seen = new Set(liveFrames.map((f: ImageFrame) => f.name));
     return [...liveFrames, ...galleryFrames.filter(f => !seen.has(f.name))]
       .sort((a, b) => b.timestamp - a.timestamp);
   }, [liveFrames, galleryFrames]);
 
   const addLog = useCallback((message: string, level: EventLogEntry['level']) => {
-    setLog(prev => [
+    setLog((prev: EventLogEntry[]) => [
       { id: Math.random().toString(36).slice(2), timestamp: new Date().toLocaleTimeString(), message, level },
       ...prev,
     ].slice(0, 80));
@@ -153,12 +153,12 @@ export default function App() {
   }, [addLog, activeAttack, stopAll]);
 
   return (
-    <main className="h-screen bg-[#020202] text-white font-sans flex flex-col overflow-hidden selection:bg-white selection:text-black">
+    <main className="min-h-[100dvh] md:h-screen bg-[#020202] text-white font-sans flex flex-col md:overflow-hidden selection:bg-white selection:text-black">
       {/* Background Glow */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,_#0a0a0a_0%,_#000_100%)] pointer-events-none -z-10" />
 
       {/* Header */}
-      <header className="border-b border-white/10 px-8 py-4 flex items-center justify-between flex-shrink-0 backdrop-blur-md bg-white/[0.02]">
+      <header className="border-b border-white/10 px-4 md:px-8 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 flex-shrink-0 backdrop-blur-md bg-white/[0.02]">
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)]">
             <Zap size={18} className="text-black" />
@@ -169,7 +169,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="flex items-center gap-10">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-10 w-full md:w-auto">
           <div className="font-mono text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 px-4 py-1.5 border border-white/20 bg-white/10">
             <span className={`w-2 h-2 rounded-full ${activeAttack ? 'bg-red-500 animate-pulse' : 'bg-white/40'}`} />
             <span className="text-white/60">SYSTEM STATUS:</span>
@@ -181,8 +181,8 @@ export default function App() {
             </span>
           </div>
 
-          <div className="flex items-center gap-6 font-mono text-[10px] text-white/40">
-            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 font-mono text-[10px] text-white/40">
+            <div className="flex items-center gap-2 md:border-l border-white/10 md:pl-6">
               <Shield size={12} />
               <span className="opacity-40">RPi:</span>
               <span className={rpiStatus === 'online' ? 'text-white font-bold' : rpiStatus === 'offline' ? 'text-red-500 font-bold' : 'text-white/20'}>
@@ -201,10 +201,10 @@ export default function App() {
       </header>
 
       {/* Body */}
-      <div className="flex-1 grid grid-cols-[340px_1fr_340px] gap-0 overflow-hidden">
+      <div className="flex-1 flex flex-col md:grid md:grid-cols-[340px_1fr_340px] gap-0 md:overflow-hidden">
 
         {/* Left: Controls */}
-        <div className="border-r border-white/10 p-6 bg-white/[0.01]">
+        <div className="border-b md:border-b-0 md:border-r border-white/10 p-4 md:p-6 bg-white/[0.01]">
           <div className="flex flex-col gap-6">
             <DeviceStatus activeAttack={activeAttack} frameCount={allFrames.length} />
             <AttackControls
@@ -219,7 +219,7 @@ export default function App() {
         </div>
 
         {/* Center: Context panel */}
-        <div className="overflow-hidden flex flex-col bg-white/[0.03] p-6">
+        <div className="min-h-[400px] md:min-h-0 md:overflow-hidden flex flex-col bg-white/[0.03] p-4 md:p-6">
           {activeAttack === 'exfil' || (!activeAttack && allFrames.length > 0) ? (
             <div className="h-full">
               <LiveImageFeed frames={allFrames} latencyMs={latencyMs} activeAttack={activeAttack} />
@@ -241,13 +241,13 @@ export default function App() {
         </div>
 
         {/* Right: Log */}
-        <div className="border-l border-white/10 p-6 overflow-hidden bg-white/[0.01]">
+        <div className="border-t md:border-t-0 md:border-l border-white/10 p-4 md:p-6 md:overflow-hidden bg-white/[0.01]">
           <EventLog entries={log} />
         </div>
       </div>
 
       {/* Compact Footer */}
-      <footer className="bg-black border-t border-white/10 px-8 py-2 flex items-center justify-between flex-shrink-0 z-10">
+      <footer className="bg-black border-t border-white/10 px-4 md:px-8 py-4 md:py-2 flex flex-col md:flex-row items-center justify-between gap-4 flex-shrink-0 z-10">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-white flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)]">
@@ -257,9 +257,9 @@ export default function App() {
           </div>
         </div>
 
-        <div className="flex items-center gap-8 text-[10px] font-mono text-white/40 uppercase tracking-widest font-bold">
+        <div className="flex items-center gap-4 md:gap-8 text-[8px] md:text-[10px] font-mono text-white/40 uppercase tracking-widest font-bold">
         
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
             {['Harshith C', 'Yashas R', 'Vijay Kumar', 'Vinay KS'].map((name, i) => (
               <span key={i} className="text-white/60 hover:text-white transition-colors cursor-default border-b border-transparent hover:border-white/20 pb-0.5">{name}</span>
             ))}

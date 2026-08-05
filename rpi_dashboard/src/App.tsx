@@ -125,7 +125,7 @@ export default function App() {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,_#0a0a0a_0%,_#000_100%)] pointer-events-none -z-10" />
 
       {/* Hero Section - Static background, normal scroll */}
-      <div ref={heroRef} className="relative w-full h-screen border-b border-white/5 overflow-hidden">
+      <div ref={heroRef} className="relative w-full h-[100dvh] border-b border-white/5 overflow-hidden">
         {/* 3D Scene */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Canvas dpr={[1, 1.5]}>
@@ -160,24 +160,24 @@ export default function App() {
         {/* HUD Overlay */}
         <div className="absolute inset-0 z-20 pointer-events-none">
           {/* Navigation */}
-          <div className="absolute top-0 left-0 w-full p-8 flex justify-between items-start">
-            <div className="space-y-1">
+          <div className="absolute top-0 left-0 w-full p-4 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="space-y-1 z-50">
               <div className="flex items-center gap-3 text-white">
                 <div className="w-8 h-8 bg-white flex items-center justify-center"><GlobeIcon size={18} className="text-black" /></div>
-                <div><h1 className="text-2xl font-black tracking-tighter uppercase leading-none">CIPHER</h1><p className="text-[9px] text-gray-500 font-mono tracking-[0.3em] uppercase mt-1">Edge IoT Security Gateway</p></div>
+                <div><h1 className="text-xl md:text-2xl font-black tracking-tighter uppercase leading-none">CIPHER</h1><p className="text-[7px] md:text-[9px] text-gray-500 font-mono tracking-[0.3em] uppercase mt-1">Edge IoT Security Gateway</p></div>
               </div>
             </div>
 
             {/* Status Badge */}
-            <div className={cn("absolute left-1/2 -translate-x-1/2 top-8 px-4 py-2 border font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 transition-colors duration-500 z-50", currentAlert.border, currentAlert.text, currentAlert.bg, currentAlert.shadow)}>
+            <div className={cn("absolute left-1/2 -translate-x-1/2 top-24 md:top-8 px-3 py-1.5 md:px-4 md:py-2 border font-mono text-[8px] md:text-[10px] whitespace-nowrap uppercase tracking-widest flex items-center gap-2 transition-colors duration-500 z-50", currentAlert.border, currentAlert.text, currentAlert.bg, currentAlert.shadow)}>
               <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", currentAlert.dot)} />
               {isUnderAttack ? (
                 <span>{alertTier === 'critical' ? 'CRITICAL' : 'WARNING'} — {activeAttackType?.toUpperCase() || 'ACTIVE THREAT'} DETECTED</span>
-              ) : protectionEnabled ? "NETWORK NOMINAL — ALL SYSTEMS SECURE" : "WARNING — GATEWAY PROTECTION DISABLED"}
+              ) : protectionEnabled ? "NETWORK NOMINAL — ALL SECURE" : "WARNING — GATEWAY DISABLED"}
             </div>
 
             {/* Controls */}
-            <div className="flex gap-2 pointer-events-auto">
+            <div className="flex gap-2 pointer-events-auto z-50 flex-wrap">
               <div className="flex flex-col items-end">
                 <button onClick={toggleProtection} disabled={isToggling} className={cn("px-4 py-2 border font-bold text-[10px] uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2", protectionEnabled ? "bg-green-500/20 text-green-400 border-green-500 hover:bg-green-500/30" : "bg-red-500/20 text-red-400 border-red-500 hover:bg-red-500/30", isToggling && "opacity-50 cursor-wait")}>
                   <Shield size={13} className={cn(isToggling && "animate-spin")} /> {protectionEnabled ? "GATEWAY: ON" : "GATEWAY: OFF"}
@@ -258,7 +258,7 @@ export default function App() {
           </AnimatePresence>
 
           {/* Bottom decorators */}
-          <div className="absolute bottom-10 left-8 flex items-end gap-8">
+          <div className="absolute bottom-6 left-4 md:bottom-10 md:left-8 flex flex-col md:flex-row items-start md:items-end gap-4 md:gap-8 z-40">
             <div className="space-y-1">
               <div className="flex gap-0.5 items-end">
                 {[...Array(12)].map((_, i) => (
@@ -300,10 +300,10 @@ export default function App() {
       </div>
 
       {/* System Intel & Capabilities Section */}
-      <section className="relative w-full h-screen bg-[#020202] border-t border-white/5 z-30 flex flex-col justify-center overflow-hidden">
+      <section className="relative w-full min-h-[100dvh] bg-[#020202] border-t border-white/5 z-30 flex flex-col justify-center overflow-hidden py-16">
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-        <div className="px-10 max-w-6xl mx-auto w-full space-y-16 relative z-10">
+        <div className="px-4 md:px-10 max-w-6xl mx-auto w-full space-y-12 md:space-y-16 relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center space-y-4">
             <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.6em] block">Edge Intelligence Architecture</span>
             <h2 className="text-4xl font-black tracking-tighter uppercase italic text-white">System Core & Capabilities</h2>
