@@ -142,7 +142,7 @@ export default function App() {
       <div ref={heroRef} className="relative w-full h-[100dvh] border-b border-white/5 overflow-hidden">
         {/* 3D Scene */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <Canvas dpr={[1, 1.5]} style={{ touchAction: 'auto' }}>
+          <Canvas dpr={[1, 1.5]} style={{ touchAction: 'pan-y' }}>
             <SceneController groupRef={groupRef} />
             <PerspectiveCamera makeDefault position={[0, 0, 9]} fov={45} />
             <ambientLight intensity={1} />
