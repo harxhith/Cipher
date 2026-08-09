@@ -186,9 +186,24 @@ export const DeviceNode: React.FC<DeviceNodeProps> = ({ position, type, label, t
           {renderModel()}
         </group>
 
+        {/* Mobile HTML tap badge button */}
+        <Html position={[0, 0.8, 0]} center zIndexRange={[100, 0]}>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(label);
+            }}
+            className="md:hidden bg-black/90 backdrop-blur-md text-white border border-white/20 px-3 py-1.5 font-black uppercase tracking-widest text-[9px] whitespace-nowrap pointer-events-auto select-none shadow-[4px_4px_0px_white] active:scale-95 transition-transform flex items-center gap-1.5"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            {label}
+          </button>
+        </Html>
+
+        {/* Desktop Hover Label */}
         {hovered && (
           <Html position={[0, 1, 0]} center>
-            <div className="bg-black/90 backdrop-blur-md text-white border border-white/20 px-4 py-2 font-black uppercase tracking-widest text-[11px] whitespace-nowrap pointer-events-none select-none shadow-[8px_8px_0px_white]">
+            <div className="hidden md:block bg-black/90 backdrop-blur-md text-white border border-white/20 px-4 py-2 font-black uppercase tracking-widest text-[11px] whitespace-nowrap pointer-events-none select-none shadow-[8px_8px_0px_white]">
               {label}
             </div>
           </Html>
