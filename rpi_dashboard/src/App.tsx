@@ -167,7 +167,7 @@ export default function App() {
                 </group>
               </group>
             </Suspense>
-            <OrbitControls enableDamping dampingFactor={0.05} enableZoom={false} enablePan={false} enableRotate={!isMobile} autoRotate={!selectedNode} autoRotateSpeed={0.3} />
+            <OrbitControls enableDamping dampingFactor={0.05} enableZoom={false} enablePan={false} touches={{ TWO: THREE.TOUCH.ROTATE }} autoRotate={!selectedNode} autoRotateSpeed={0.3} />
           </Canvas>
         </div>
 
