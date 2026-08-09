@@ -30,6 +30,10 @@ function SceneController({ groupRef }: { groupRef: React.RefObject<THREE.Group |
     const scale = isMobile ? 0.6 : 0.9;
     groupRef.current.scale.set(scale, scale, scale);
     groupRef.current.position.y = 0;
+    
+    // Scroll-driven cinematic rotation
+    const scrollY = window.scrollY;
+    groupRef.current.rotation.x = scrollY * 0.001;
   });
   return null;
 }
@@ -40,6 +44,14 @@ export default function App() {
   const [showLogs, setShowLogs] = useState(false);
   const groupRef = useRef<THREE.Group>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (groupRef.current) {
@@ -155,7 +167,7 @@ export default function App() {
                 </group>
               </group>
             </Suspense>
-            <OrbitControls enableDamping dampingFactor={0.05} enableZoom={false} enablePan={false} autoRotate={!selectedNode} autoRotateSpeed={0.3} />
+            <OrbitControls enableDamping dampingFactor={0.05} enableZoom={false} enablePan={false} enableRotate={!isMobile} autoRotate={!selectedNode} autoRotateSpeed={0.3} />
           </Canvas>
         </div>
 
