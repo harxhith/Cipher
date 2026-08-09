@@ -26,7 +26,9 @@ const IS_DEMO = import.meta.env.VITE_DEMO_MODE === 'true';
 function SceneController({ groupRef }: { groupRef: React.RefObject<THREE.Group | null> }) {
   useFrame(() => {
     if (!groupRef.current) return;
-    groupRef.current.scale.set(0.9, 0.9, 0.9);
+    const isMobile = window.innerWidth < 768;
+    const scale = isMobile ? 0.6 : 0.9;
+    groupRef.current.scale.set(scale, scale, scale);
     groupRef.current.position.y = 0;
   });
   return null;
@@ -128,7 +130,7 @@ export default function App() {
       <div ref={heroRef} className="relative w-full h-[100dvh] border-b border-white/5 overflow-hidden">
         {/* 3D Scene */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <Canvas dpr={[1, 1.5]}>
+          <Canvas dpr={[1, 1.5]} style={{ touchAction: 'auto' }}>
             <SceneController groupRef={groupRef} />
             <PerspectiveCamera makeDefault position={[0, 0, 9]} fov={45} />
             <ambientLight intensity={1} />
@@ -169,7 +171,7 @@ export default function App() {
             </div>
 
             {/* Status Badge */}
-            <div className={cn("absolute left-1/2 -translate-x-1/2 top-24 md:top-8 px-3 py-1.5 md:px-4 md:py-2 border font-mono text-[8px] md:text-[10px] whitespace-nowrap uppercase tracking-widest flex items-center gap-2 transition-colors duration-500 z-50", currentAlert.border, currentAlert.text, currentAlert.bg, currentAlert.shadow)}>
+            <div className={cn("absolute left-1/2 -translate-x-1/2 top-36 md:top-8 px-3 py-1.5 md:px-4 md:py-2 border font-mono text-[8px] md:text-[10px] whitespace-nowrap uppercase tracking-widest flex items-center gap-2 transition-colors duration-500 z-50", currentAlert.border, currentAlert.text, currentAlert.bg, currentAlert.shadow)}>
               <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", currentAlert.dot)} />
               {isUnderAttack ? (
                 <span>{alertTier === 'critical' ? 'CRITICAL' : 'WARNING'} — {activeAttackType?.toUpperCase() || 'ACTIVE THREAT'} DETECTED</span>
